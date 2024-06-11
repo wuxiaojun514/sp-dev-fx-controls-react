@@ -963,7 +963,9 @@ export class DynamicForm extends React.Component<
       let bodySections: ICustomFormattingBodySection[];
       if (listInfo.ClientFormCustomFormatter && listInfo.ClientFormCustomFormatter[contentTypeId]) {
         const customFormatInfo = JSON.parse(listInfo.ClientFormCustomFormatter[contentTypeId]) as ICustomFormatting;
-        bodySections = customFormatInfo.bodyJSONFormatter.sections;
+        if(customFormatInfo.bodyJSONFormatter){
+          bodySections = customFormatInfo.bodyJSONFormatter.sections; 
+        }
         headerJSON = customFormatInfo.headerJSONFormatter;
         footerJSON = customFormatInfo.footerJSONFormatter;
       }
