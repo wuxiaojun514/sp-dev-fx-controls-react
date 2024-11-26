@@ -19,12 +19,17 @@ import { LocationPicker } from '../../locationPicker';
 import { IPeoplePickerContext, PeoplePicker, PrincipalType } from '../../peoplepicker';
 import { RichText } from '../../richText';
 import { IPickerTerms, TaxonomyPicker } from '../../taxonomyPicker';
-import styles from '../DynamicForm.module.scss';
-import { IDynamicFieldProps } from './IDynamicFieldProps';
+import { IDynamicFieldProps, IDynamicFieldStyleProps, IDynamicFieldStyles } from './IDynamicFieldProps';
 import { IDynamicFieldState } from './IDynamicFieldState';
 import CurrencyMap from "../CurrencyMap";
+import { classNamesFunction, IProcessedStyleSet, styled, useTheme } from '@fluentui/react';
+import { getFluentUIThemeOrDefault } from '../../../common/utilities/ThemeUtility';
+import { getFieldStyles } from './DynamicField.styles';
 
-export class DynamicField extends React.Component<IDynamicFieldProps, IDynamicFieldState> {
+const getClassNames = classNamesFunction<IDynamicFieldStyleProps, IDynamicFieldStyles>();
+
+
+export class DynamicFieldBase extends React.Component<IDynamicFieldProps, IDynamicFieldState> {
 
   constructor(props: IDynamicFieldProps) {
     super(props);
@@ -36,6 +41,8 @@ export class DynamicField extends React.Component<IDynamicFieldProps, IDynamicFi
     };
   }
 
+  private _classNames: IProcessedStyleSet<IDynamicFieldStyles>;
+
   public componentDidUpdate(): void {
     if ((this.props.defaultValue === "" || this.props.defaultValue === null) && this.state.changedValue === null) {
       this.setState({ changedValue: "" });
@@ -44,6 +51,12 @@ export class DynamicField extends React.Component<IDynamicFieldProps, IDynamicFi
 
   public render(): JSX.Element {
     try {
+      const theme = getFluentUIThemeOrDefault();
+      const styles = (this._classNames = getClassNames(this.props.styles, {
+        theme: theme,
+        required:this.props.required
+      }));
+  
       return (
         <div className={styles.FieldEditor}>
           {this.getFieldComponent()}
@@ -89,6 +102,7 @@ export class DynamicField extends React.Component<IDynamicFieldProps, IDynamicFi
       changedValue
     } = this.state;
 
+    const styles=this._classNames;
     const dropdownOptions: IDropdownProps = {
       options: options,
       disabled: disabled,
@@ -103,7 +117,7 @@ export class DynamicField extends React.Component<IDynamicFieldProps, IDynamicFi
 
     // const defaultValue = fieldDefaultValue;
 
-    const labelEl = <label className={(required) ? styles.fieldRequired + ' ' + styles.fieldLabel : styles.fieldLabel}>{label}</label>;
+    const labelEl = <label className={styles.fieldLabel}>{label}</label>;
     const errorText = this.props.validationErrorMessage || this.getRequiredErrorText();
     const errorTextEl = <text className={styles.errormessage}>{errorText}</text>;
     const descriptionEl = <text className={styles.fieldDescription}>{description}</text>;
@@ -460,7 +474,6 @@ export class DynamicField extends React.Component<IDynamicFieldProps, IDynamicFi
             {labelEl}
           </div>
           <Stack
-            //className={styles.filePicker}
             horizontal
             tokens={{
               childrenGap: 20
@@ -767,3 +780,12 @@ export class DynamicField extends React.Component<IDynamicFieldProps, IDynamicFi
     }
   }
 }
+
+export const DynamicField = styled<IDynamicFieldProps, IDynamicFieldStyleProps, IDynamicFieldStyles>(
+  DynamicFieldBase,
+  getFieldStyles,
+  undefined,
+  {
+    scope: 'DynamicField',
+  },
+);

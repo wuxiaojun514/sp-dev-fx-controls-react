@@ -16,11 +16,11 @@
       }
     },
     "testForm_NewForm": {
-      "pageUrl": "https://enter-your-SharePoint-site.sharepoint.com/sites/mySite/_layouts/15/SPListForm.aspx",
+      "pageUrl": "https://thenewdevelopmentbank.sharepoint.com/sites/operationdatabaseproject/_layouts/15/SPListForm.aspx",
       "formCustomizer": {
         "componentId": "f9c6b930-8d5d-4550-bfd9-ed5f6ca443a8",
         "PageType": 8,
-        "RootFolder": "/sites/mySite/Lists/MyList",
+        "RootFolder": "/sites/operationdatabaseproject/Lists/Project%20Team",
         "properties": {
           "sampleText": "Value"
         }

@@ -1,4 +1,5 @@
 import { BaseComponentContext } from '@microsoft/sp-component-base';
+import { IStyle, IStyleFunctionOrObject, Theme } from '@fluentui/react';
 import { IDropdownOption } from "@fluentui/react/lib/Dropdown";
 import { IFilePickerResult } from '../../filePicker';
 
@@ -92,4 +93,30 @@ export interface IDynamicFieldProps {
   itemsQueryCountLimit?: number;
   customIcon?: string;
   orderBy?: string;
+  styles?:IStyleFunctionOrObject<IDynamicFieldStyleProps, IDynamicFieldStyles>;
+}
+
+export type IDynamicFieldStyleProps= Pick<IDynamicFieldProps, 
+|'required'  > & {
+   theme: Theme; 
+};
+
+export interface IDynamicFieldStyles {
+
+  titleContainer: IStyle;
+  fieldIcon:IStyle;
+  fieldDisplay:IStyle;
+  fieldDisplayNoPadding:IStyle;
+  fieldContainer:IStyle;
+  fieldDescription:IStyle,
+  fieldLabel:IStyle;
+  labelContainer:IStyle;
+  pickersContainer:IStyle;
+  FieldEditor:IStyle;
+  errormessage:IStyleFunctionOrObject<any, any>;
+  richText:IStyle;
+  thumbnailFieldButtons:IStyle;
+  selectedFileContainer:IStyle;
+
+
 }

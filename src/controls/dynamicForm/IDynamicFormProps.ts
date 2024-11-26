@@ -1,8 +1,9 @@
-import { BaseComponentContext } from '@microsoft/sp-component-base';
+import { BaseComponentContext, ITheme } from '@microsoft/sp-component-base';
 import { IItem } from '@pnp/sp/items';
 import React from 'react';
-import { IDynamicFieldProps } from './dynamicField';
+import { IDynamicFieldProps, IDynamicFieldStyleProps, IDynamicFieldStyles } from './dynamicField';
 import { IValidationErrorDialogProps } from './IValidationErrorDialogProps';
+import { IStyle, IStyleFunctionOrObject } from '@fluentui/react';
 
 export interface IDynamicFormProps {
   /**
@@ -139,4 +140,22 @@ export interface IDynamicFormProps {
    * @default true
    */
    storeLastActiveTab?: boolean;
+
+   styles?: IStyleFunctionOrObject<IDynamicFormStyleProps, IDynamicFormStyles>;
+   fieldStyles?:IStyleFunctionOrObject<IDynamicFieldStyleProps,IDynamicFieldStyles>;
+   className?:string
+}
+
+
+
+export type IDynamicFormStyleProps= Pick<IDynamicFormProps, 'className'> & {};
+
+export interface IDynamicFormStyles {
+    root:IStyle;
+    sectionHeader: IStyle;
+    sectionFormContianer: IStyle;
+    sectionFormField: IStyle;
+
+  
+  
 }
