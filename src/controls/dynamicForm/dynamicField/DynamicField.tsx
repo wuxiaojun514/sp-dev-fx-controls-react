@@ -22,7 +22,7 @@ import { IPickerTerms, TaxonomyPicker } from '../../taxonomyPicker';
 import { IDynamicFieldProps, IDynamicFieldStyleProps, IDynamicFieldStyles } from './IDynamicFieldProps';
 import { IDynamicFieldState } from './IDynamicFieldState';
 import CurrencyMap from "../CurrencyMap";
-import { classNamesFunction, IProcessedStyleSet, styled, useTheme } from '@fluentui/react';
+import { classNamesFunction, IProcessedStyleSet, styled } from '@fluentui/react';
 import { getFluentUIThemeOrDefault } from '../../../common/utilities/ThemeUtility';
 import { getFieldStyles } from './DynamicField.styles';
 
@@ -83,7 +83,6 @@ export class DynamicFieldBase extends React.Component<IDynamicFieldProps, IDynam
       disabled,
       label,
       placeholder,
-      required,
       isRichText,
       //bingAPIKey,
       dateFormat,

@@ -1,7 +1,10 @@
-import { BaseComponentContext, ITheme } from '@microsoft/sp-component-base';
+import { BaseComponentContext } from '@microsoft/sp-component-base';
 import { IItem } from '@pnp/sp/items';
 import React from 'react';
-import { IDynamicFieldProps, IDynamicFieldStyleProps, IDynamicFieldStyles } from './dynamicField';
+import {
+  IDynamicFieldProps,
+  IDynamicFieldStyles,
+} from './dynamicField';
 import { IValidationErrorDialogProps } from './IValidationErrorDialogProps';
 import { IStyle, IStyleFunctionOrObject } from '@fluentui/react';
 
@@ -132,30 +135,38 @@ export interface IDynamicFormProps {
    * Specify fields custom sorting.
    * The value is the field internal name.
    */
-  fieldOrder?: string[]
+  fieldOrder?: string[];
 
   /**
    * When uploading files: Specifies if last active tab will be stored after the Upload panel has been closed.
    * Note: the value of selected tab is stored in the queryString hash.
    * @default true
    */
-   storeLastActiveTab?: boolean;
+  storeLastActiveTab?: boolean;
 
-   styles?: IStyleFunctionOrObject<IDynamicFormStyleProps, IDynamicFormStyles>;
-   fieldStyles?:IStyleFunctionOrObject<IDynamicFieldStyleProps,IDynamicFieldStyles>;
-   className?:string
+  styles?: IStyleFunctionOrObject<IDynamicFormStyleProps, IDynamicFormStyles>;
+  className?: string;
 }
 
+export type IDynamicFormStyleProps = Pick<IDynamicFormProps, 'className'> & { };
 
-
-export type IDynamicFormStyleProps= Pick<IDynamicFormProps, 'className'> & {};
+export interface IDynamicFormSubComponentStyles {
+  fieldStyles: IDynamicFieldStyles;
+}
 
 export interface IDynamicFormStyles {
-    root:IStyle;
-    sectionHeader: IStyle;
-    sectionFormContianer: IStyle;
-    sectionFormField: IStyle;
-
-  
-  
+  root: IStyle;
+  sectionHeader: IStyle;
+  sectionFormContianer: IStyle;
+  sectionFormField: IStyle;
+  sectionLine: IStyle;
+  validationErrorDialog: IStyle;
+  buttons: IStyle;
+  actions: IStyle;
+  actionsRight: IStyle;
+  action: IStyle;
+   /**
+   * sub component styles for dynamic field
+   */
+   subComponentStyles: IDynamicFormSubComponentStyles;
 }

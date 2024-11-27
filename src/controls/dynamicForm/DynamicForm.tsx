@@ -1,7 +1,6 @@
 /* eslint-disable @microsoft/spfx/no-async-await */
 import * as React from "react";
 import * as strings from "ControlStrings";
-import styles from "./DynamicForm.module.scss";
 
 // Controls
 import {
@@ -18,7 +17,6 @@ import { MessageBar, MessageBarType } from "@fluentui/react/lib/MessageBar";
 import { ProgressIndicator } from "@fluentui/react/lib/ProgressIndicator";
 import { IStackTokens, Stack } from "@fluentui/react/lib/Stack";
 import { Icon } from "@fluentui/react/lib/Icon";
-import { classNamesFunction, IStyleFunctionOrObject, styled } from "@uifabric/utilities";
 import { DynamicField } from "./dynamicField";
 import {
   DateFormat,
@@ -50,14 +48,15 @@ import { IDynamicFormProps,  IDynamicFormStyleProps, IDynamicFormStyles } from "
 import { IDynamicFormState } from "./IDynamicFormState";
 import { getStyles } from "./DynamicForm.sytles";
 import { getFluentUIThemeOrDefault } from "../../common/utilities/ThemeUtility";
+import { classNamesFunction, IProcessedStyleSet, styled } from "@fluentui/react";
 
 
 
 
 
 const stackTokens: IStackTokens = { childrenGap: 20 };
-const getClassNames = classNamesFunction<IDynamicFormStyleProps, IDynamicFormStyles>();
-const getFieldClassNames = classNamesFunction<IDynamicFieldStyleProps, IDynamicFieldStyles>();
+const getstyles = classNamesFunction<IDynamicFormStyleProps, IDynamicFormStyles>();
+const getFieldstyles = classNamesFunction<IDynamicFieldStyleProps, IDynamicFieldStyles>();
 const theme = getFluentUIThemeOrDefault();
 
 /**
@@ -74,7 +73,7 @@ export class DynamicFormBase extends React.Component<
   private webURL = this.props.webAbsoluteUrl
     ? this.props.webAbsoluteUrl
     : this.props.context.pageContext.web.absoluteUrl;
-
+  private _classNames: IProcessedStyleSet<IDynamicFormStyles>;
 
   constructor(props: IDynamicFormProps) {
     super(props);
@@ -171,10 +170,7 @@ export class DynamicFormBase extends React.Component<
       headerContent = this._customFormatter.renderCustomFormatContent(customFormatting.header, this.getFormValuesForValidation(), true) as JSX.Element;
     }
 
-    const classNames = getClassNames(this.props.styles, {
-    });
-
-  
+    const styles =(this._classNames = getstyles(this.props.styles, {className:className}));
 
     // Custom Formatting - Body
     const bodySections: ICustomFormattingBodySection[] = [];
@@ -202,7 +198,7 @@ export class DynamicFormBase extends React.Component<
 
 
     return (
-      <div className={classNames.root}>
+      <div className={styles.root}>
         {infoErrorMessages.map((ie, i) => (
           <MessageBar key={i} messageBarType={ie.type}>{ie.message}</MessageBar>
         ))}
@@ -225,10 +221,10 @@ export class DynamicFormBase extends React.Component<
               .filter(bs => bs.fields.filter(bsf => hiddenByFormula.indexOf(bsf) < 0).length > 0)
               .map((section, i) => (
               <>
-                <h2 className={classNames.sectionHeader}>{section.displayname}</h2>
-                <div className={classNames.sectionFormContianer}>
+                <h2 className={styles.sectionHeader}>{section.displayname}</h2>
+                <div className={styles.sectionFormContianer}>
                   {section.fields.map((f, i) => (
-                    <div key={f} className={classNames.sectionFormField}>
+                    <div key={f} className={styles.sectionFormField}>
                       {this.renderField(fieldCollection.find(fc => fc.label === f) as IDynamicFieldProps)}
                     </div>
                   ))}
@@ -303,7 +299,8 @@ export class DynamicFormBase extends React.Component<
 }
 
   private renderField = (field: IDynamicFieldProps): JSX.Element => {
-    const { fieldOverrides,fieldStyles } = this.props;
+    const { fieldOverrides } = this.props;
+    const fieldStyles=this._classNames.subComponentStyles.fieldStyles;
     const { hiddenByFormula, isSaving, validationErrors } = this.state;
 
     // If the field is hidden by a formula or field doesn't exist (usually occurs in section layout when field display name changed), don't render it
@@ -756,7 +753,7 @@ export class DynamicFormBase extends React.Component<
 
     // Init new value(s)
     field.newValue = newValue;
-    field.stringValue = newValue.toString();
+    field.stringValue = newValue?.toString();
     field.additionalData = additionalData;
     field.subPropertyValues = {};
 
@@ -1431,11 +1428,7 @@ export class DynamicFormBase extends React.Component<
       missingSelectedFile
     } = this.state;
 
-    const styles = getFieldClassNames(this.props.fieldStyles, {
-        theme: theme,
-        required: true
-      });
-
+    const styles =getFieldstyles( this._classNames.subComponentStyles.fieldStyles(),{theme:theme,required:true});
     const labelEl = <label className={ styles.fieldLabel}>{strings.DynamicFormChooseFileLabel}</label>;
 
     return <div>

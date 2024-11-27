@@ -3,7 +3,7 @@ import { Log, FormDisplayMode } from '@microsoft/sp-core-library';
 import { FormCustomizerContext } from '@microsoft/sp-listview-extensibility';
 import { EnhancedThemeProvider } from '../../../EnhancedThemeProvider';
 import { DynamicForm } from '../../../DynamicForm';
-// import styles from './TestForm.module.scss';
+import styles from './TestForm.module.scss';
 
 export interface ITestFormProps {
   context: FormCustomizerContext;
@@ -39,6 +39,25 @@ export default class TestForm extends React.Component<ITestFormProps, ITestFormS
       <EnhancedThemeProvider applyTo="element" context={this.props.context}>
         <DynamicForm
           context={this.props.context}
+          styles={{
+            sectionFormField: {
+              selectors: {
+                ':has(div)': {
+                  'min-width': '19vmax',
+                },
+              },
+            },
+            subComponentStyles:{
+              fieldStyles:{
+                errormessage:{
+                  "font-size":"18px"
+                }
+              }
+            }
+          }}
+          
+          className={styles.testForm}
+          enableFileSelection={true}
           listId={this.props.context.list.guid.toString()}
           listItemId={this.props.context.itemId}
           onListItemLoaded={async (listItemData: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any

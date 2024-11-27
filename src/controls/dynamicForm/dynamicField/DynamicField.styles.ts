@@ -1,4 +1,4 @@
-import { IStyle, IStyleFunctionOrObject } from '@fluentui/react';
+import { IStyle } from '@fluentui/react';
 import {
   IDynamicFieldStyleProps,
   IDynamicFieldStyles,
@@ -10,20 +10,20 @@ export const getFieldStyles = (
   const { required, theme } = props;
   const { palette } = theme;
   const globalClassNames = {
-    titleContianer: 'titleContainer',
-    fieldEditor: 'fieldEditor',
-    fieldIcon: 'fieldIcon',
-    fieldContainer:'fieldContainer',
-    fieldDisplay: 'fieldDisplay',
-    fieldDisplayNoPadding: 'fieldDisplayNoPadding',
-    fieldDescription: 'fieldDescription',
-    fieldLabel: 'fieldLabel',
-    labelContainer: 'labelContainer',
-    pickersContainer:'pickersContainer',
-    errormessage: 'errormessage',
-    richText:'richText',
-    thumbnailFieldButtons:'thumbnailFieldButtons',
-    selectedFileContainer:'selectedFileContainer'
+    titleContianer: 'dynamicfield-titleContainer',
+    fieldEditor: 'dynamicfield-fieldEditor',
+    fieldIcon: 'dynamicfield-fieldIcon',
+    fieldContainer: 'dynamicfield-fieldContainer',
+    fieldDisplay: 'dynamicfield-fieldDisplay',
+    fieldDisplayNoPadding: 'dynamicfield-fieldDisplayNoPadding',
+    fieldDescription: 'dynamicfield-fieldDescription',
+    fieldLabel: 'dynamicfield-fieldLabel',
+    labelContainer: 'dynamicfield-labelContainer',
+    pickersContainer: 'dynamicfield-pickersContainer',
+    errormessage: 'dynamicfield-errormessage',
+    richText: 'dynamicfield-richText',
+    thumbnailFieldButtons: 'dynamicfield-thumbnailFieldButtons',
+    selectedFileContainer: 'dynamicfield-selectedFileContainer',
   };
 
   const fieldDisplayNoPadding_style: IStyle = {
@@ -59,7 +59,10 @@ export const getFieldStyles = (
       },
     ],
     fieldDisplay: [globalClassNames.fieldDisplay, fieldDisplay_style],
-    fieldContainer: [globalClassNames.fieldContainer, { 'padding-bottom': '4px'}],
+    fieldContainer: [
+      globalClassNames.fieldContainer,
+      { 'padding-bottom': '4px' },
+    ],
     fieldDisplayNoPadding: [
       globalClassNames.fieldDisplayNoPadding,
       fieldDisplay_style,
@@ -79,7 +82,7 @@ export const getFieldStyles = (
         display: 'block',
         'user-select': 'none',
         '-webkit-user-select': 'none',
-      }
+      },
     ],
     fieldLabel: [
       globalClassNames.fieldLabel,
@@ -97,21 +100,36 @@ export const getFieldStyles = (
         'overflow-wrap': 'break-word',
         display: 'block',
       },
-      required && {
-        selectors: {
-          '::after': {
-            content: ' *',
-            color: theme.semanticColors.errorText,
-            'padding-right': '12px',
+      required && [
+        'fieldRequired',
+        {
+          selectors: {
+            ':after': {
+              content: `' *'`,
+              color: theme.semanticColors.errorText,
+              'padding-right': '12px',
+            },
           },
         },
-      }
+      ],
     ],
-    labelContainer: [globalClassNames.labelContainer,{ 'padding-bottom': '7px' }],
-    pickersContainer: [globalClassNames.pickersContainer,{ padding: '6px 0 0px' }],
-    selectedFileContainer:[globalClassNames.selectedFileContainer,{ display: 'flex',margin: '10px 0px' }],
-    richText:[globalClassNames.richText,{ position: 'relative' }],
-    thumbnailFieldButtons:[globalClassNames.thumbnailFieldButtons,{ display: 'flex' }],
+    labelContainer: [
+      globalClassNames.labelContainer,
+      { 'padding-bottom': '7px' },
+    ],
+    pickersContainer: [
+      globalClassNames.pickersContainer,
+      { padding: '6px 0 0px' },
+    ],
+    selectedFileContainer: [
+      globalClassNames.selectedFileContainer,
+      { display: 'flex', margin: '10px 0px' },
+    ],
+    richText: [globalClassNames.richText, { position: 'relative' }],
+    thumbnailFieldButtons: [
+      globalClassNames.thumbnailFieldButtons,
+      { display: 'flex' },
+    ],
     errormessage: [
       globalClassNames.errormessage,
       {
@@ -126,7 +144,7 @@ export const getFieldStyles = (
         'padding-top': '5px',
         display: 'flex',
         'align-items': 'center',
-      }
+      },
     ],
   };
 };
