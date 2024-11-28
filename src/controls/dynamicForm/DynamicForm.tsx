@@ -44,7 +44,7 @@ import { Context } from "../../common/utilities/FormulaEvaluation.types";
 import CustomFormattingHelper from "../../common/utilities/CustomFormatting";
 
 // Dynamic Form Props / State
-import { IDynamicFormProps,  IDynamicFormStyleProps, IDynamicFormStyles } from "./IDynamicFormProps";
+import { IDynamicFormProps, IDynamicFormStyleProps, IDynamicFormStyles } from "./IDynamicFormProps";
 import { IDynamicFormState } from "./IDynamicFormState";
 import { getStyles } from "./DynamicForm.sytles";
 import { getFluentUIThemeOrDefault } from "../../common/utilities/ThemeUtility";
@@ -160,17 +160,19 @@ export class DynamicFormBase extends React.Component<
    */
   public render(): JSX.Element {
     const { customFormatting, fieldCollection, hiddenByFormula, infoErrorMessages, isSaving } = this.state;
-    const {className}=this.props;
+    const { className } = this.props;
 
     const customFormattingDisabled = this.props.useCustomFormatting === false;
+
+    const styles = (this._classNames = getstyles(this.props.styles, { className: className }));
 
     // Custom Formatting - Header
     let headerContent: JSX.Element;
     if (!customFormattingDisabled && customFormatting?.header) {
-      headerContent = this._customFormatter.renderCustomFormatContent(customFormatting.header, this.getFormValuesForValidation(), true) as JSX.Element;
+      headerContent = <div className={styles.header}>
+        {this._customFormatter.renderCustomFormatContent(customFormatting.header, this.getFormValuesForValidation(), true)}
+      </div>
     }
-
-    const styles =(this._classNames = getstyles(this.props.styles, {className:className}));
 
     // Custom Formatting - Body
     const bodySections: ICustomFormattingBodySection[] = [];
@@ -189,7 +191,9 @@ export class DynamicFormBase extends React.Component<
     // Custom Formatting - Footer
     let footerContent: JSX.Element;
     if (!customFormattingDisabled && customFormatting?.footer) {
-      footerContent = this._customFormatter.renderCustomFormatContent(customFormatting.footer, this.getFormValuesForValidation(), true) as JSX.Element;
+      footerContent = <div className={styles.footer}>
+        {this._customFormatter.renderCustomFormatContent(customFormatting.footer, this.getFormValuesForValidation(), true)}
+      </div>
     }
 
     // Content Type
@@ -220,18 +224,18 @@ export class DynamicFormBase extends React.Component<
             {(bodySections.length > 0 && !customFormattingDisabled) && bodySections
               .filter(bs => bs.fields.filter(bsf => hiddenByFormula.indexOf(bsf) < 0).length > 0)
               .map((section, i) => (
-              <>
-                <h2 className={styles.sectionHeader}>{section.displayname}</h2>
-                <div className={styles.sectionFormContianer}>
-                  {section.fields.map((f, i) => (
-                    <div key={f} className={styles.sectionFormField}>
-                      {this.renderField(fieldCollection.find(fc => fc.label === f) as IDynamicFieldProps)}
-                    </div>
-                  ))}
-                </div>
-                {i < bodySections.length - 1 && <hr className={styles.sectionLine} aria-hidden={true} />}
-              </>
-            ))}
+                <>
+                  <h2 className={styles.sectionTitle}>{section.displayname}</h2>
+                  <div className={styles.sectionFormFields}>
+                    {section.fields.map((f, i) => (
+                      <div key={f} className={styles.sectionFormField}>
+                        {this.renderField(fieldCollection.find(fc => fc.label === f) as IDynamicFieldProps)}
+                      </div>
+                    ))}
+                  </div>
+                  {i < bodySections.length - 1 && <hr className={styles.sectionLine} aria-hidden={true} />}
+                </>
+              ))}
             {(bodySections.length === 0 || customFormattingDisabled) && fieldCollection.map((f, i) => this.renderField(f))}
             {footerContent}
             {!this.props.disabled && (
@@ -287,20 +291,20 @@ export class DynamicFormBase extends React.Component<
     }
 
     const sortedFields = customSort
-    .map((sortColumn) => sortColumn.toLowerCase())
-    .filter((normalizedSortColumn) => fMap.has(normalizedSortColumn))
-    .map((normalizedSortColumn) => fMap.get(normalizedSortColumn))
-    .filter((field) => field !== undefined);
+      .map((sortColumn) => sortColumn.toLowerCase())
+      .filter((normalizedSortColumn) => fMap.has(normalizedSortColumn))
+      .map((normalizedSortColumn) => fMap.get(normalizedSortColumn))
+      .filter((field) => field !== undefined);
 
     const remainingFields = fields.filter((field) => !sortedFields.includes(field));
     const uniqueRemainingFields = Array.from(new Set(remainingFields));
 
     return [...sortedFields, ...uniqueRemainingFields];
-}
+  }
 
   private renderField = (field: IDynamicFieldProps): JSX.Element => {
     const { fieldOverrides } = this.props;
-    const fieldStyles=this._classNames.subComponentStyles.fieldStyles;
+    const fieldStyles = this._classNames.subComponentStyles.fieldStyles;
     const { hiddenByFormula, isSaving, validationErrors } = this.state;
 
     // If the field is hidden by a formula or field doesn't exist (usually occurs in section layout when field display name changed), don't render it
@@ -322,7 +326,7 @@ export class DynamicFormBase extends React.Component<
         field.columnInternalName
       )
     ) {
-      return fieldOverrides[field.columnInternalName]({ ...field,disabled: field.disabled || isSaving} )
+      return fieldOverrides[field.columnInternalName]({ ...field, disabled: field.disabled || isSaving })
     }
 
     // Default render
@@ -372,7 +376,7 @@ export class DynamicFormBase extends React.Component<
 
         // When a field is required and has no value
         if (field.required) {
-          if (field.newValue === undefined && field.value===undefined) {
+          if (field.newValue === undefined && field.value === undefined) {
             if (
               field.defaultValue === null ||
               field.defaultValue === "" ||
@@ -580,7 +584,7 @@ export class DynamicFormBase extends React.Component<
         contentTypeId === undefined ||
         contentTypeId === "" ||
         (!contentTypeId.startsWith("0x0120") &&
-        contentTypeId.startsWith("0x01"))
+          contentTypeId.startsWith("0x01"))
       ) {
         if (fileSelectRendered === true) {
           await this.addFileToLibrary(objects);
@@ -689,50 +693,50 @@ export class DynamicFormBase extends React.Component<
 
 
     if (selectedFile !== undefined) {
-        try {
-          const idField = "ID";
-          const contentTypeIdField = "ContentTypeId";
+      try {
+        const idField = "ID";
+        const contentTypeIdField = "ContentTypeId";
 
-          const library = await sp.web.lists.getById(listId);
-          const itemTitle =
-            selectedFile !== undefined && selectedFile.fileName !== undefined && selectedFile.fileName !== ""
-              ? (selectedFile.fileName as string).replace(
-                /["|*|:|<|>|?|/|\\||]/g,
-                "_"
-              ) // Replace not allowed chars in folder name
-              : ""; // Empty string will be replaced by SPO with Folder Item ID
+        const library = await sp.web.lists.getById(listId);
+        const itemTitle =
+          selectedFile !== undefined && selectedFile.fileName !== undefined && selectedFile.fileName !== ""
+            ? (selectedFile.fileName as string).replace(
+              /["|*|:|<|>|?|/|\\||]/g,
+              "_"
+            ) // Replace not allowed chars in folder name
+            : ""; // Empty string will be replaced by SPO with Folder Item ID
 
-          const fileCreatedResult = await library.rootFolder.files.addChunked(encodeURI(itemTitle), await selectedFile.downloadFileContent());
-          const fields = await fileCreatedResult.file.listItemAllFields();
+        const fileCreatedResult = await library.rootFolder.files.addChunked(encodeURI(itemTitle), await selectedFile.downloadFileContent());
+        const fields = await fileCreatedResult.file.listItemAllFields();
 
-          if (fields[idField]) {
-            // Read the ID of the just created folder or Document Set
-            const folderId = fields[idField];
+        if (fields[idField]) {
+          // Read the ID of the just created folder or Document Set
+          const folderId = fields[idField];
 
-            // Set the content type ID for the target item
-            objects[contentTypeIdField] = contentTypeId;
-            // Update the just created folder or Document Set
-            const iur = await library.items.getById(folderId).update(objects);
-            if (onSubmitted) {
-              onSubmitted(
-                iur.data,
-                returnListItemInstanceOnSubmit !== false
-                  ? iur.item
-                  : undefined
-              );
-            }
-          } else {
-            throw new Error(
-              "Unable to read the ID of the just created folder or Document Set"
+          // Set the content type ID for the target item
+          objects[contentTypeIdField] = contentTypeId;
+          // Update the just created folder or Document Set
+          const iur = await library.items.getById(folderId).update(objects);
+          if (onSubmitted) {
+            onSubmitted(
+              iur.data,
+              returnListItemInstanceOnSubmit !== false
+                ? iur.item
+                : undefined
             );
           }
-        } catch (error) {
-          if (onSubmitError) {
-            onSubmitError(objects, error);
-          }
-          console.log("Error", error);
+        } else {
+          throw new Error(
+            "Unable to read the ID of the just created folder or Document Set"
+          );
         }
+      } catch (error) {
+        if (onSubmitError) {
+          onSubmitError(objects, error);
+        }
+        console.log("Error", error);
       }
+    }
   }
 
   /**
@@ -818,7 +822,7 @@ export class DynamicFormBase extends React.Component<
       field.stringValue = emails.join(";");
     }
 
-    const validationErrors = {...this.state.validationErrors};
+    const validationErrors = { ...this.state.validationErrors };
     if (validationErrors[field.columnInternalName]) delete validationErrors[field.columnInternalName];
 
     this.setState({
@@ -1000,7 +1004,7 @@ export class DynamicFormBase extends React.Component<
       let bodySections: ICustomFormattingBodySection[];
       if (listInfo.ClientFormCustomFormatter && listInfo.ClientFormCustomFormatter[contentTypeId]) {
         const customFormatInfo = JSON.parse(listInfo.ClientFormCustomFormatter[contentTypeId]) as ICustomFormatting;
-        bodySections = customFormatInfo.bodyJSONFormatter.sections;
+        bodySections = customFormatInfo.bodyJSONFormatter?.sections;
         headerJSON = customFormatInfo.headerJSONFormatter;
         footerJSON = customFormatInfo.footerJSONFormatter;
       }
@@ -1076,7 +1080,7 @@ export class DynamicFormBase extends React.Component<
    * @returns
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async buildFieldCollection(listInfo: IRenderListDataAsStreamClientFormResult, contentTypeName: string, item: any, numberFields: ISPField[], listId: string, listItemId: number, disabledFields: string[], customIcons: {[key: string]: string}): Promise<IDynamicFieldProps[]> {
+  private async buildFieldCollection(listInfo: IRenderListDataAsStreamClientFormResult, contentTypeName: string, item: any, numberFields: ISPField[], listId: string, listItemId: number, disabledFields: string[], customIcons: { [key: string]: string }): Promise<IDynamicFieldProps[]> {
     const tempFields: IDynamicFieldProps[] = [];
     let order: number = 0;
     const hiddenFields = this.props.hiddenFields !== undefined ? this.props.hiddenFields : [];
@@ -1087,7 +1091,7 @@ export class DynamicFormBase extends React.Component<
 
       // Process fields that are not marked as hidden
       if (hiddenFields.indexOf(field.InternalName) < 0) {
-        if(field.Hidden === false) {
+        if (field.Hidden === false) {
           order++;
           let hiddenName = "";
           let termSetId = "";
@@ -1108,12 +1112,12 @@ export class DynamicFormBase extends React.Component<
           let showAsPercentage: boolean | undefined;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const selectedTags: any = [];
-  
+
           let fieldName = field.InternalName;
           if (fieldName.startsWith('_x') || fieldName.startsWith('_')) {
             fieldName = `OData_${fieldName}`;
           }
-  
+
           // If a SharePoint Item was loaded, get the field value from it
           if (item !== null && item[fieldName]) {
             value = item[fieldName];
@@ -1121,7 +1125,7 @@ export class DynamicFormBase extends React.Component<
           } else {
             defaultValue = field.DefaultValue;
           }
-  
+
           // Store choices for Choice fields
           if (field.FieldType === "Choice") {
             field.Choices.forEach((element) => {
@@ -1133,7 +1137,7 @@ export class DynamicFormBase extends React.Component<
               choices.push({ key: element, text: element });
             });
           }
-  
+
           // Setup Note, Number and Currency fields
           if (field.FieldType === "Note") {
             richText = field.RichText;
@@ -1149,7 +1153,7 @@ export class DynamicFormBase extends React.Component<
               cultureName = this.cultureNameLookup(numberField.CurrencyLocaleId);
             }
           }
-  
+
           // Setup Lookup fields
           if (field.FieldType === "Lookup" || field.FieldType === "LookupMulti") {
             lookupListId = field.LookupListId;
@@ -1172,7 +1176,7 @@ export class DynamicFormBase extends React.Component<
               value = [];
             }
           }
-  
+
           // Setup User fields
           if (field.FieldType === "User") {
             if (item !== null) {
@@ -1211,7 +1215,7 @@ export class DynamicFormBase extends React.Component<
             }
             principalType = field.PrincipalAccountType;
           }
-  
+
           // Setup Taxonomy / Metadata fields
           if (field.FieldType === "TaxonomyFieldType") {
             termSetId = field.TermSetId;
@@ -1253,7 +1257,7 @@ export class DynamicFormBase extends React.Component<
                   name: element.Label,
                 });
               });
-  
+
               value = selectedTags;
             } else {
               if (defaultValue && defaultValue !== "") {
@@ -1264,19 +1268,19 @@ export class DynamicFormBase extends React.Component<
                       name: element.split("|")[0],
                     });
                 });
-  
+
                 value = selectedTags;
                 stringValue = selectedTags?.map(dv => dv.key + ';#' + dv.name).join(';#');
               }
             }
             if (defaultValue === "") defaultValue = null;
           }
-  
+
           // Setup DateTime fields
           if (field.FieldType === "DateTime") {
-  
+
             if (item !== null && item[fieldName]) {
-  
+
               value = new Date(item[fieldName]);
               stringValue = value.toISOString();
             } else if (defaultValue === "[today]") {
@@ -1284,11 +1288,11 @@ export class DynamicFormBase extends React.Component<
             } else if (defaultValue) {
               defaultValue = new Date(defaultValue);
             }
-  
+
             dateFormat = field.DateFormat || "DateOnly";
             defaultDayOfWeek = (await this._spService.getRegionalWebSettings(this.webURL)).FirstDayOfWeek;
           }
-  
+
           // Setup Thumbnail, Location and Boolean fields
           if (field.FieldType === "Thumbnail") {
             if (defaultValue) {
@@ -1306,7 +1310,7 @@ export class DynamicFormBase extends React.Component<
             if (defaultValue !== undefined && defaultValue !== null) defaultValue = Boolean(Number(defaultValue));
             if (value !== undefined && value !== null) value = Boolean(Number(value));
           }
-  
+
           tempFields.push({
             value,
             newValue: undefined,
@@ -1344,7 +1348,7 @@ export class DynamicFormBase extends React.Component<
             showAsPercentage: showAsPercentage,
             customIcon: customIcons ? customIcons[field.InternalName] : undefined
           });
-  
+
           // This may not be necessary now using RenderListDataAsStream
           tempFields.sort((a, b) => a.Order - b.Order);
         }
@@ -1428,8 +1432,12 @@ export class DynamicFormBase extends React.Component<
       missingSelectedFile
     } = this.state;
 
-    const styles =getFieldstyles( this._classNames.subComponentStyles.fieldStyles(),{theme:theme,required:true});
-    const labelEl = <label className={ styles.fieldLabel}>{strings.DynamicFormChooseFileLabel}</label>;
+
+
+
+    const styles = getFieldstyles(this._classNames.subComponentStyles.fieldStyles(), { theme: theme });
+
+    const labelEl = <label className={styles.fieldLabel + " " + styles.fieldRequired}>{strings.DynamicFormChooseFileLabel}</label>;
 
     return <div>
       <div className={styles.titleContainer}>

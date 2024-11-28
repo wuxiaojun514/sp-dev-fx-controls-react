@@ -1,3 +1,4 @@
+import { IStyle } from '@fluentui/react';
 import { getFluentUIThemeOrDefault } from '../../common/utilities/ThemeUtility';
 import { getFieldStyles } from './dynamicField/DynamicField.styles';
 import type {
@@ -10,29 +11,37 @@ export const getStyles = (
 ): IDynamicFormStyles => {
   const className = props.className;
   const globalClassNames = {
-    sectionFormField: 'dynamicform-sectionFormField',
-    sectionFormFields: 'dynamicform-sectionFormFields',
-    sectionTitle: 'dynamicform-sectionTitle',
-    sectionLine: 'dynamicform-sectionLine',
-    validationErrorDialog: 'dynamicform-validationErrorDialog',
-    buttons: 'dynamicform-buttons',
-    actions: 'dynamicform-actions',
-    action: 'dynamicform-action',
-    actionsRight: 'dynamicform-actionsRight',
+    sectionFormField: 'sectionFormField',
+    sectionFormFields: 'sectionFormFields',
+    sectionTitle: 'sectionTitle',
+    sectionLine: 'sectionLine',
+    header:'header',
+    footer:'footer',
+    validationErrorDialog: 'validationErrorDialog',
+    buttons: 'buttons',
+    actions: 'actions',
+    action: 'action',
+    actionsRight: 'actionsRight',
   };
   const theme = getFluentUIThemeOrDefault();
 
-  return {
-    root: [className, {
-      selectors: {
-        '.sp-field-customFormatter': {
-          'min-height': 'inherit',
-          display: 'flex',
-          'align-items': 'center'
-        }
-      }
+  const paddingleft_style: IStyle = {
+    'padding-left': '20px'
+  };
 
-    }],
+  return {
+    root: [
+      className,
+      {
+        selectors: {
+          '.sp-field-customFormatter': {
+            'min-height': 'inherit',
+            display: 'flex',
+            'align-items': 'center',
+          },
+        },
+      },
+    ],
     sectionFormField: [
       globalClassNames.sectionFormField,
       {
@@ -48,7 +57,7 @@ export const getStyles = (
         },
       },
     ],
-    sectionFormContianer: [
+    sectionFormFields: [
       globalClassNames.sectionFormFields,
       {
         display: 'flex',
@@ -56,7 +65,7 @@ export const getStyles = (
       },
     ],
 
-    sectionHeader: [
+    sectionTitle: [
       globalClassNames.sectionTitle,
       {
         color: '#000000',
@@ -65,8 +74,17 @@ export const getStyles = (
         'margin-top': '6px',
         'margin-bottom': '12px',
         clear: 'both',
-        'padding-left': '20px',
+        'padding-left': '20px'
       },
+    ],
+    header: [
+      globalClassNames.header,
+      paddingleft_style 
+     
+    ],
+    footer: [
+      globalClassNames.footer,
+      paddingleft_style 
     ],
     sectionLine: [
       globalClassNames.sectionLine,
@@ -77,7 +95,7 @@ export const getStyles = (
         'border-left-width': '0',
         'border-right-width': '0',
         clear: 'both',
-      }
+      },
     ],
     validationErrorDialog: [
       globalClassNames.validationErrorDialog,
@@ -86,8 +104,8 @@ export const getStyles = (
           '.ms-Dialog-main': {
             'max-width': '540px',
             width: '540px',
-          }
-        }
+          },
+        },
       },
     ],
     buttons: [
@@ -128,8 +146,7 @@ export const getStyles = (
       },
     ],
     subComponentStyles: {
-      fieldStyles: getFieldStyles({theme:theme,required:false})
+      fieldStyles: getFieldStyles({ theme: theme }),
     },
-   
   };
 };

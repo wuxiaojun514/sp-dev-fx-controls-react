@@ -10,20 +10,21 @@ export const getFieldStyles = (
   const { required, theme } = props;
   const { palette } = theme;
   const globalClassNames = {
-    titleContianer: 'dynamicfield-titleContainer',
-    fieldEditor: 'dynamicfield-fieldEditor',
-    fieldIcon: 'dynamicfield-fieldIcon',
-    fieldContainer: 'dynamicfield-fieldContainer',
-    fieldDisplay: 'dynamicfield-fieldDisplay',
-    fieldDisplayNoPadding: 'dynamicfield-fieldDisplayNoPadding',
-    fieldDescription: 'dynamicfield-fieldDescription',
-    fieldLabel: 'dynamicfield-fieldLabel',
-    labelContainer: 'dynamicfield-labelContainer',
-    pickersContainer: 'dynamicfield-pickersContainer',
-    errormessage: 'dynamicfield-errormessage',
-    richText: 'dynamicfield-richText',
-    thumbnailFieldButtons: 'dynamicfield-thumbnailFieldButtons',
-    selectedFileContainer: 'dynamicfield-selectedFileContainer',
+    titleContianer: 'titleContainer',
+    fieldEditor: 'fieldEditor',
+    fieldIcon: 'fieldIcon',
+    fieldContainer: 'fieldContainer',
+    fieldDisplay: 'fieldDisplay',
+    fieldDisplayNoPadding: 'fieldDisplayNoPadding',
+    fieldDescription: 'fieldDescription',
+    fieldLabel: 'fieldLabel',
+    labelContainer: 'labelContainer',
+    pickersContainer: 'pickersContainer',
+    errormessage: 'errormessage',
+    richText: 'richText',
+    thumbnailFieldButtons: 'thumbnailFieldButtons',
+    selectedFileContainer: 'selectedFileContainer',
+    fieldRequired: 'fieldRequired',
   };
 
   const fieldDisplayNoPadding_style: IStyle = {
@@ -37,6 +38,16 @@ export const getFieldStyles = (
 
   const fieldDisplay_style: IStyle = fieldDisplayNoPadding_style && {
     padding: '6px 0 0px 0',
+  };
+
+  const fieldRequired_style: IStyle = {
+    selectors: {
+      '::after': {
+        content: `' *'`,
+        color: theme.semanticColors.errorText,
+        'padding-right': '12px',
+      },
+    },
   };
 
   const fontfamily =
@@ -100,19 +111,9 @@ export const getFieldStyles = (
         'overflow-wrap': 'break-word',
         display: 'block',
       },
-      required && [
-        'fieldRequired',
-        {
-          selectors: {
-            ':after': {
-              content: `' *'`,
-              color: theme.semanticColors.errorText,
-              'padding-right': '12px',
-            },
-          },
-        },
-      ],
+      required && [globalClassNames.fieldRequired, fieldRequired_style],
     ],
+    fieldRequired: [globalClassNames.fieldRequired, fieldRequired_style],
     labelContainer: [
       globalClassNames.labelContainer,
       { 'padding-bottom': '7px' },

@@ -156,10 +156,12 @@ export interface IDynamicFormSubComponentStyles {
 
 export interface IDynamicFormStyles {
   root: IStyle;
-  sectionHeader: IStyle;
-  sectionFormContianer: IStyle;
+  sectionTitle: IStyle;
+  sectionFormFields: IStyle;
   sectionFormField: IStyle;
   sectionLine: IStyle;
+  header:IStyle;
+  footer:IStyle;
   validationErrorDialog: IStyle;
   buttons: IStyle;
   actions: IStyle;

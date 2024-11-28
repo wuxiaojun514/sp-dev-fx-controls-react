@@ -96,10 +96,10 @@ export interface IDynamicFieldProps {
   styles?:IStyleFunctionOrObject<IDynamicFieldStyleProps, IDynamicFieldStyles>;
 }
 
-export type IDynamicFieldStyleProps= Pick<IDynamicFieldProps, 
-|'required'  > & {
+export interface IDynamicFieldStyleProps {
    theme: Theme; 
-};
+   required?: boolean;
+}
 
 export interface IDynamicFieldStyles {
 
@@ -117,6 +117,7 @@ export interface IDynamicFieldStyles {
   richText:IStyle;
   thumbnailFieldButtons:IStyle;
   selectedFileContainer:IStyle;
+  fieldRequired:IStyle;
 
 
 }
