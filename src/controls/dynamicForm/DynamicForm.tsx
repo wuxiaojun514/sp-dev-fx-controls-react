@@ -46,7 +46,7 @@ import CustomFormattingHelper from "../../common/utilities/CustomFormatting";
 // Dynamic Form Props / State
 import { IDynamicFormProps, IDynamicFormStyleProps, IDynamicFormStyles } from "./IDynamicFormProps";
 import { IDynamicFormState } from "./IDynamicFormState";
-import { getStyles } from "./DynamicForm.sytles";
+import { getStyles } from "./DynamicForm.styles";
 import { getFluentUIThemeOrDefault } from "../../common/utilities/ThemeUtility";
 import { classNamesFunction, IProcessedStyleSet, styled } from "@fluentui/react";
 
