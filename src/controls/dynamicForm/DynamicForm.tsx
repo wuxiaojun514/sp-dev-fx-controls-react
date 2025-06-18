@@ -33,7 +33,7 @@ import "@pnp/sp/content-types";
 import "@pnp/sp/folders";
 import "@pnp/sp/items";
 import { IFolder } from "@pnp/sp/folders";
-import { IInstalledLanguageInfo, IItemUpdateResult, IList, ITermInfo } from "@pnp/sp/presets/all";
+import { IInstalledLanguageInfo, IItemUpdateResult, IList, ITermInfo, ChoiceFieldFormatType } from "@pnp/sp/presets/all";
 import { cloneDeep, isEqual } from "lodash";
 import { ICustomFormatting, ICustomFormattingBodySection, ICustomFormattingNode } from "../../common/utilities/ICustomFormatting";
 import SPservice from "../../services/SPService";
@@ -459,7 +459,7 @@ export class DynamicFormBase extends React.Component<
         if (fieldcolumnInternalName.startsWith('_x') || fieldcolumnInternalName.startsWith('_')) {
           fieldcolumnInternalName = `OData_${fieldcolumnInternalName}`;
         }
-        if (field.newValue !== null && field.newValue !== undefined) {
+        if (field.newValue !== undefined) {
 
           let value = field.newValue;
 
@@ -491,7 +491,7 @@ export class DynamicFormBase extends React.Component<
               value.push(element.key);
             });
             objects[`${fieldcolumnInternalName}Id`] = {
-              results: value.length === 0 ? null : value,
+              results: value.length === 0 ? [] : value,
             };
           }
 
@@ -774,7 +774,7 @@ export class DynamicFormBase extends React.Component<
     const { useModernTaxonomyPicker } = this.props;
     // Init new value(s)
     field.newValue = newValue;
-    field.stringValue = newValue.toString();
+    field.stringValue = newValue? newValue.toString():'';
     field.additionalData = additionalData;
     field.subPropertyValues = {};
 
@@ -994,7 +994,7 @@ export class DynamicFormBase extends React.Component<
       // Fetch additional information about fields from SharePoint
       // (Number fields for min and max values, and fields with validation)
       const additionalInfo = await this._spService.getAdditionalListFormFieldInfo(listId, this.webURL);
-      const numberFields = additionalInfo.filter((f) => f.TypeAsString === "Number" || f.TypeAsString === "Currency");
+      const numberFields = additionalInfo?.filter((f) => f.TypeAsString === "Number" || f.TypeAsString === "Currency");
 
       // Build a dictionary of validation formulas and messages
       const validationFormulas: Record<string, Pick<ISPField, "ValidationFormula" | "ValidationMessage">> = additionalInfo.reduce((prev, cur) => {
@@ -1148,6 +1148,7 @@ export class DynamicFormBase extends React.Component<
           let showAsPercentage: boolean | undefined;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const selectedTags: any = [];
+          let choiceType: ChoiceFieldFormatType | undefined;
 
           let fieldName = field.InternalName;
           if (fieldName.startsWith('_x') || fieldName.startsWith('_')) {
@@ -1167,11 +1168,20 @@ export class DynamicFormBase extends React.Component<
             field.Choices.forEach((element) => {
               choices.push({ key: element, text: element });
             });
+
+            if (field.FormatType === 1) {
+              choiceType = ChoiceFieldFormatType.RadioButtons;
+            }
+            else {
+              choiceType = ChoiceFieldFormatType.Dropdown;
+            }
           }
           if (field.FieldType === "MultiChoice") {
             field.MultiChoices.forEach((element) => {
               choices.push({ key: element, text: element });
             });
+
+            choiceType = ChoiceFieldFormatType.Dropdown;
           }
 
           // Setup Note, Number and Currency fields
@@ -1461,6 +1471,7 @@ export class DynamicFormBase extends React.Component<
             showAsPercentage: showAsPercentage,
             customIcon: customIcons ? customIcons[field.InternalName] : undefined,
             useModernTaxonomyPickerControl: useModernTaxonomyPicker,
+            choiceType: choiceType
           });
 
           // This may not be necessary now using RenderListDataAsStream
